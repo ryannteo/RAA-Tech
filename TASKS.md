@@ -1,35 +1,34 @@
-# Task split (3 people)
+# Task split (3 developers)
 
-Shared foundation is already in place: `DisputeState` contract, `BaseAgent`
-interface, graph wiring, API skeleton, frontend skeleton. Every agent
-currently returns placeholder data, so the whole pipeline already runs
-end-to-end — pick a track and replace the placeholder logic in your files
-without touching anyone else's.
+The shared contracts and deterministic demo flow are ready. Each developer
+can implement one core reasoning component against a stable interface.
+Actual LLM reasoning remains outside the current hardening pass.
 
-## Track A — Advocate agents
-- [ ] `backend/app/agents/rider_agent.py`
-- [ ] `backend/app/agents/driver_agent.py`
-- [ ] `backend/app/agents/evidence_agent.py` (feeds both advocates — load real data from `backend/app/data/`)
+| Track | Owned implementation | Stable interface |
+| --- | --- | --- |
+| A — Rider Advocate | `backend/app/agents/rider_agent.py` | `run(AdvocateInput) -> AdvocateCase` with side `rider` |
+| B — Driver Advocate | `backend/app/agents/driver_agent.py` | `run(AdvocateInput) -> AdvocateCase` with side `driver` |
+| C — Judge | `backend/app/agents/judge_agent.py` | `run(JudgeInput) -> Ruling` |
 
-## Track B — Judge & knowledge
-- [ ] `backend/app/agents/judge_agent.py`
-- [ ] `backend/app/agents/policy_agent.py` (RAG over company policy)
-- [ ] `backend/app/data/policies.json` (write the sample policy corpus)
+Both advocates receive the same dispute, evidence, and policy; neither
+receives the other's output. The Judge receives both cases and the factual
+context. Each component must return its validated model and identify
+whether its output came from a stub or LLM.
 
-## Track C — Ops agents & escalation
-- [ ] `backend/app/agents/sla_agent.py`
-- [ ] `backend/app/agents/fraud_agent.py`
-- [ ] `backend/app/agents/escalation_agent.py` (Escalation + Human Review + Feedback Loop)
+Shared changes to `schemas/dispute.py`, `agents/state.py`, `agents/base.py`,
+`agents/graph.py`, or `frontend/src/types.ts` should update all consumers and
+contract tests together. Keep agent-only changes out of these shared files
+where possible.
 
-## Shared / cross-cutting (whoever has bandwidth)
-- [ ] Frontend: wire up `frontend/src/assets/brand/` once real Ryde assets arrive
-- [ ] Tencent Cloud DB: fill in `backend/.env` and wire `backend/app/db/models.py`, replacing `db/store.py`
-- [ ] LLM: pick a provider, fill in `LLM_*` vars in `backend/.env`
-- [ ] Demo prep: make sure at least 2 dispute categories work end-to-end (route deviation + no-show is the easiest pair)
-- [ ] Architecture diagram for submission (starting point in `docs/ARCHITECTURE.md`)
+Evidence and policy services are deterministic and already implemented.
+Do not replace them with LLM reasoning. The two stable scenarios must remain
+usable without credentials. Provider integration should be coordinated as a
+separate task when actual reasoning is authorized.
 
-## Ground rules
-- Don't edit `state.py`, `base.py`, or `graph.py` without a quick heads-up in
-  the group chat — they're the shared contract everyone's agent depends on.
-- If your agent needs a new field on `DisputeState`, add it in `state.py` and
-  say so, don't just stuff it into the dict.
+Before integrating work, run backend `python -m pytest -q` and frontend
+`npm run build`. Read [AGENTS.md](AGENTS.md) and
+[the architecture document](docs/ARCHITECTURE.md) for the current boundaries.
+
+Fraud detection, RAG/embeddings, database integration, multimodal analysis,
+human-review implementation, learning loops, queues, and streaming are
+deferred. No automatic human decision or feedback should be introduced.

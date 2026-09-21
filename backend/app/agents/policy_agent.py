@@ -1,23 +1,14 @@
-# Policy & Precedent Agent - retrieves company policy + past rulings for the Judge (RAG).
-# Writes: policy_context = [{title, excerpt}, ...]
-# TODO: load backend/app/data/policies.json, embed it, similarity-search against
-# state["category"] / the advocates' claims. Stretch: index past rulings as precedent.
+"""Category-based policy lookup; no precedent search or reasoning."""
 from app.agents.base import BaseAgent
-from app.agents.state import DisputeState
+from app.schemas.dispute import DisputeCategory, PolicyContext
+from app.services.scenarios import load_policy
 
 
-class PolicyPrecedentAgent(BaseAgent):
-    name = "policy_precedent"
+class PolicyPrecedentAgent(BaseAgent[DisputeCategory, PolicyContext]):
+    name = "policy_lookup"
 
-    async def run(self, state: DisputeState) -> DisputeState:
-        self.log(state, f"Looking up policy for category '{state.get('category')}'...")
-
-        state["policy_context"] = [
-            {"title": "Placeholder Policy", "excerpt": "Replace with real policy retrieval."}
-        ]
-
-        self.log(state, "Policy context attached.")
-        return state
+    async def run(self, context: DisputeCategory) -> PolicyContext:
+        return load_policy(context)
 
 
 policy_precedent_agent = PolicyPrecedentAgent()

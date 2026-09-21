@@ -1,25 +1,22 @@
-# Every agent implements this. Use self.log() for anything that should show
-# up in the frontend's live agent-communication timeline.
+"""Agent implementations consume contracts, never the entire graph state."""
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Generic, TypeVar
 
-from app.agents.state import DisputeState
+from app.schemas.dispute import AgentLogEntry
+
+Input = TypeVar("Input")
+Output = TypeVar("Output")
 
 
-class BaseAgent(ABC):
+class BaseAgent(ABC, Generic[Input, Output]):
     name: str = "base_agent"
 
     @abstractmethod
-    async def run(self, state: DisputeState) -> DisputeState:
+    async def run(self, context: Input) -> Output:
         ...
 
-    def log(self, state: DisputeState, message: str, data: Optional[dict[str, Any]] = None) -> None:
-        state.setdefault("communication_log", []).append(
-            {
-                "agent": self.name,
-                "message": message,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-                "data": data,
-            }
+    def log(self, message: str) -> AgentLogEntry:
+        return AgentLogEntry(
+            agent=self.name, message=message, timestamp=datetime.now(timezone.utc),
         )

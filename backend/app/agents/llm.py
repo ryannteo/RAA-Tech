@@ -1,6 +1,4 @@
-# Swappable LLM client. Defaults to a mock (no API key needed) so the graph
-# runs end-to-end on day one. Point LLM_PROVIDER/LLM_BASE_URL/LLM_API_KEY at
-# any OpenAI-compatible endpoint (Tencent Hunyuan, OpenAI, ...) when ready.
+# Dormant provider scaffold: the current graph uses typed stubs and never calls this client.
 from app.config import get_settings
 
 

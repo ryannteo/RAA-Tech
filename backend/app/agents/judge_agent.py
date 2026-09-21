@@ -1,27 +1,23 @@
-# Judge Agent - impartial arbitrator, weighs both cases + policy + risk, issues a ruling.
-# Reads: rider_case, driver_case, policy_context, risk_signals
-# Writes: ruling = {decision, amount, reasoning}, confidence (0-1, drives escalation)
-# TODO: replace placeholder with a real LLM prompt returning structured JSON -
-# parse defensively, this node is what the whole demo hinges on.
+"""Fixed demo outputs exercise both routing paths; no LLM reasoning."""
 from app.agents.base import BaseAgent
-from app.agents.state import DisputeState
+from app.schemas.dispute import DisputeCategory, JudgeInput, Ruling
 
 
-class JudgeAgent(BaseAgent):
+class JudgeAgent(BaseAgent[JudgeInput, Ruling]):
     name = "judge"
 
-    async def run(self, state: DisputeState) -> DisputeState:
-        self.log(state, "Weighing rider and driver cases against policy...")
-
-        state["ruling"] = {
-            "decision": "partial_refund",
-            "amount": 3.25,
-            "reasoning": "Placeholder ruling - replace with LLM-generated reasoning.",
-        }
-        state["confidence"] = 0.85
-
-        self.log(state, "Ruling issued.", data={**state["ruling"], "confidence": state["confidence"]})
-        return state
+    async def run(self, context: JudgeInput) -> Ruling:
+        if context.context.dispute.category == DisputeCategory.ROUTE_DEVIATION:
+            return Ruling(
+                decision="partial_refund", amount=2.50, currency="SGD",
+                confidence=0.85, source="stub",
+                reasoning="Fixed demo ruling to exercise routing. The cases and policy have not been adjudicated.",
+            )
+        return Ruling(
+            decision="no_action", amount=0.0, currency="SGD",
+            confidence=0.60, source="stub",
+            reasoning="Fixed demo ruling to exercise review routing. Pickup uncertainty has not been adjudicated.",
+        )
 
 
 judge_agent = JudgeAgent()

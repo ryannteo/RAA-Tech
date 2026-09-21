@@ -1,0 +1,27 @@
+{
+  "category": "route_deviation",
+  "version": "demo-2026-09-v1",
+  "is_mock": true,
+  "rules": [
+    {
+      "rule_id": "RD-01",
+      "title": "Reasonable route",
+      "text": "Use a reasonable direct route. A safe diversion for roadworks or traffic is permitted when supported by trip evidence; the shortest route is not automatically required."
+    },
+    {
+      "rule_id": "RD-02",
+      "title": "Notify material changes",
+      "text": "Explain a material detour and likely fare impact when safely possible. A request for the fastest route is not blanket consent to unexplained extra distance."
+    },
+    {
+      "rule_id": "RD-03",
+      "title": "Fare adjustment",
+      "text": "Refund only the supported excess attributable to an unjustified diversion. An estimated quote alone does not prove overcharging; assess tolls and road conditions."
+    },
+    {
+      "rule_id": "COMMON-01",
+      "title": "Evidence uncertainty",
+      "text": "GPS gaps and unavailable data are uncertainty, not proof of misconduct. Prior dispute counts alone must not determine liability."
+    }
+  ]
+}

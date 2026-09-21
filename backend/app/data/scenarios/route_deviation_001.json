@@ -1,0 +1,158 @@
+{
+  "scenario_id": "route_deviation_001",
+  "category": "route_deviation",
+  "title": "Route deviation — evening roadworks",
+  "description": "A longer route raised the fare by SGD 4.60. A roadworks advisory supports a diversion, but the GPS gap and lack of explicit agreement leave its extent disputed.",
+  "trip_id": "trip_rd_20260918_1740",
+  "rider_id": "rider_demo_014",
+  "driver_id": "driver_demo_027",
+  "evidence": {
+    "scenario_id": "route_deviation_001",
+    "trip_id": "trip_rd_20260918_1740",
+    "gps_data": {
+      "availability": "available",
+      "data": {
+        "points": [
+          {
+            "timestamp": "2026-09-18T17:40:00+08:00",
+            "latitude": 1.2887,
+            "longitude": 103.8467,
+            "accuracy_m": 8
+          },
+          {
+            "timestamp": "2026-09-18T17:46:00+08:00",
+            "latitude": 1.2921,
+            "longitude": 103.852,
+            "accuracy_m": 11
+          },
+          {
+            "timestamp": "2026-09-18T17:54:00+08:00",
+            "latitude": 1.306,
+            "longitude": 103.874,
+            "accuracy_m": 18
+          },
+          {
+            "timestamp": "2026-09-18T17:57:00+08:00",
+            "latitude": 1.311,
+            "longitude": 103.88,
+            "accuracy_m": 46
+          },
+          {
+            "timestamp": "2026-09-18T18:04:00+08:00",
+            "latitude": 1.3216,
+            "longitude": 103.8917,
+            "accuracy_m": 12
+          },
+          {
+            "timestamp": "2026-09-18T18:08:00+08:00",
+            "latitude": 1.3177,
+            "longitude": 103.8924,
+            "accuracy_m": 7
+          }
+        ],
+        "actual_route_km": 11.4,
+        "estimated_route_km": 8.6,
+        "waiting_minutes": 0,
+        "pickup_distance_m": 12,
+        "events": [
+          {
+            "timestamp": "2026-09-18T17:35:00+08:00",
+            "source": "dispatch_advisory",
+            "description": "Roadworks reported on the planned corridor; advisory suggests a diversion but does not confirm which lanes are closed."
+          },
+          {
+            "timestamp": "2026-09-18T17:40:00+08:00",
+            "source": "trip_meter",
+            "description": "Pickup near Clarke Quay; destination Paya Lebar."
+          },
+          {
+            "timestamp": "2026-09-18T17:58:00+08:00",
+            "source": "driver_app",
+            "description": "GPS updates lost until 18:01; meter continued recording distance."
+          },
+          {
+            "timestamp": "2026-09-18T18:08:00+08:00",
+            "source": "trip_meter",
+            "description": "Trip completed. Meter distance 11.4 km; original route estimate 8.6 km."
+          }
+        ],
+        "limitations": [
+          "GPS points are a sparse sample, not a complete route reconstruction.",
+          "No GPS fixes between 17:58 and 18:01; a stop or additional detour cannot be confirmed.",
+          "The advisory supports some diversion, but does not establish that all 2.8 extra kilometres were necessary."
+        ]
+      },
+      "reason": null
+    },
+    "chat_logs": {
+      "availability": "available",
+      "data": [
+        {
+          "timestamp": "2026-09-18T17:39:00+08:00",
+          "sender": "rider",
+          "message": "Please take the fastest way; I need to reach Paya Lebar by 6.",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-18T17:47:00+08:00",
+          "sender": "driver",
+          "message": "Roadworks ahead. I will go around via the next turn.",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-18T17:48:00+08:00",
+          "sender": "rider",
+          "message": "How much more will that cost?",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-18T17:50:00+08:00",
+          "sender": "driver",
+          "message": "Not sure, traffic is moving better this way.",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-18T18:03:00+08:00",
+          "sender": "rider",
+          "message": "The map looks like we passed the turn. Please go straight to the drop-off.",
+          "delivered": true
+        }
+      ],
+      "reason": null
+    },
+    "fare_data": {
+      "availability": "available",
+      "data": {
+        "currency": "SGD",
+        "quoted_total": 18.8,
+        "charged_total": 23.4,
+        "distance_charge": 14.2,
+        "cancellation_fee": 0,
+        "tolls": 1.8,
+        "limitations": [
+          "The quote was an estimate; the fixture does not include a counterfactual metered fare for the original route."
+        ]
+      },
+      "reason": null
+    },
+    "user_history": {
+      "availability": "available",
+      "data": {
+        "rider": {
+          "completed_trips": 146,
+          "prior_disputes": 1,
+          "prior_cancellations": 2
+        },
+        "driver": {
+          "completed_trips": 2480,
+          "prior_disputes": 3,
+          "prior_cancellations": 7
+        },
+        "limitations": [
+          "Counts cover completed account history through the previous day. Prior dispute outcomes are unavailable and counts do not establish fault."
+        ]
+      },
+      "reason": null
+    }
+  }
+}

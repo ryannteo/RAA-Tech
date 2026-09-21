@@ -1,39 +1,41 @@
-import uuid
-
 from fastapi import APIRouter, HTTPException
 
-from app.agents.graph import run_dispute_graph
+from app.agents.graph import AdvocateContractError, run_dispute_graph
 from app.db.store import store
-from app.schemas.dispute import DisputeSubmission
+from app.schemas.dispute import DisputeResult, DisputeSubmission, ScenarioSummary
+from app.services.scenarios import (
+    ScenarioMismatchError, UnknownScenarioError, create_dispute, list_scenarios,
+)
 
 router = APIRouter(prefix="/disputes", tags=["disputes"])
 
 
-@router.post("")
+@router.get("/scenarios", response_model=tuple[ScenarioSummary, ...])
+async def get_scenarios():
+    return list_scenarios()
+
+
+@router.post("", response_model=DisputeResult)
 async def submit_dispute(payload: DisputeSubmission):
-    initial_state = {
-        "dispute_id": str(uuid.uuid4()),
-        "category": payload.category,
-        "trip_id": payload.trip_id,
-        "rider_id": payload.rider_id,
-        "driver_id": payload.driver_id,
-        "rider_statement": payload.rider_statement,
-        "driver_statement": payload.driver_statement,
-        "escalated": False,
-        "communication_log": [],
-    }
-
-    final_state = await run_dispute_graph(initial_state)
-    store.save(final_state)
-    return final_state
+    try:
+        dispute = create_dispute(payload)
+        result = await run_dispute_graph(dispute)
+    except UnknownScenarioError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ScenarioMismatchError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except AdvocateContractError as exc:
+        raise HTTPException(status_code=502, detail=exc.detail.model_dump()) from exc
+    store.save(result)
+    return result
 
 
-@router.get("")
+@router.get("", response_model=list[DisputeResult])
 async def list_disputes():
     return store.list()
 
 
-@router.get("/{dispute_id}")
+@router.get("/{dispute_id}", response_model=DisputeResult)
 async def get_dispute(dispute_id: str):
     dispute = store.get(dispute_id)
     if dispute is None:

@@ -1,63 +1,103 @@
-import { useState } from "react";
-import type { SubmitDisputePayload } from "../api/client";
-
-const CATEGORIES = ["route_deviation", "no_show", "property_damage", "safety_incident"];
+import { useEffect, useState } from "react";
+import { listScenarios } from "../api/client";
+import type { ScenarioSummary, SubmitDisputePayload } from "../types";
 
 interface Props {
   onSubmit: (payload: SubmitDisputePayload) => void;
+  onScenarioChange: () => void;
   loading: boolean;
 }
 
-export default function DisputeForm({ onSubmit, loading }: Props) {
-  const [category, setCategory] = useState(CATEGORIES[0]);
-  const [riderStatement, setRiderStatement] = useState(
-    "Driver took a longer route and I was overcharged.",
-  );
+export default function DisputeForm({ onSubmit, onScenarioChange, loading }: Props) {
+  const [scenarios, setScenarios] = useState<ScenarioSummary[]>([]);
+  const [selectedId, setSelectedId] = useState("");
+  const [scenarioError, setScenarioError] = useState<string | null>(null);
+  const [riderStatement, setRiderStatement] = useState("");
+  const [driverStatement, setDriverStatement] = useState("");
+  const selected = scenarios.find((scenario) => scenario.scenario_id === selectedId);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  useEffect(() => {
+    let active = true;
+    listScenarios().then((items) => {
+      if (active) {
+        setScenarios(items);
+        setSelectedId(items[0]?.scenario_id ?? "");
+        if (!items.length) setScenarioError("No demo scenarios are available.");
+      }
+    }).catch((error: unknown) => {
+      if (active) setScenarioError(error instanceof Error ? error.message : "Unable to load scenarios.");
+    });
+    return () => { active = false; };
+  }, []);
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!selected) return;
     onSubmit({
-      category,
-      trip_id: `trip-${Date.now()}`,
-      rider_id: "rider-demo",
-      driver_id: "driver-demo",
-      rider_statement: riderStatement,
+      scenario_id: selected.scenario_id,
+      category: selected.category,
+      rider_statement: riderStatement.trim() || null,
+      driver_statement: driverStatement.trim() || null,
     });
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 rounded-2xl border border-ryde-light p-4">
       <label className="text-sm font-medium">
-        Category
+        Demo scenario
         <select
           className="mt-1 w-full rounded-lg border border-gray-300 p-2"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={selectedId}
+          disabled={loading || !scenarios.length}
+          onChange={(event) => {
+            setSelectedId(event.target.value);
+            setRiderStatement("");
+            setDriverStatement("");
+            onScenarioChange();
+          }}
         >
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
+          {!scenarios.length && <option value="">Loading scenarios...</option>}
+          {scenarios.map((scenario) => (
+            <option key={scenario.scenario_id} value={scenario.scenario_id}>{scenario.title}</option>
           ))}
         </select>
       </label>
-
+      {scenarioError && <p role="alert" className="text-sm text-red-600">{scenarioError}</p>}
+      {selected && (
+        <p className="text-sm text-gray-600">
+          {selected.description}<br />
+          <span className="text-xs">{selected.scenario_id} · {selected.category}</span>
+        </p>
+      )}
       <label className="text-sm font-medium">
-        Rider statement
+        Rider statement (optional)
         <textarea
           className="mt-1 w-full rounded-lg border border-gray-300 p-2"
           value={riderStatement}
-          onChange={(e) => setRiderStatement(e.target.value)}
+          disabled={loading}
+          onChange={(event) => setRiderStatement(event.target.value)}
           rows={3}
         />
       </label>
-
+      <label className="text-sm font-medium">
+        Driver statement (optional)
+        <textarea
+          className="mt-1 w-full rounded-lg border border-gray-300 p-2"
+          value={driverStatement}
+          disabled={loading}
+          onChange={(event) => setDriverStatement(event.target.value)}
+          rows={3}
+        />
+      </label>
+      <p className="text-xs text-gray-500">
+        Demo data and policy. Advocate and judge outputs are stubs; statements do not change the preset ruling.
+      </p>
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !selected}
         className="rounded-full bg-ryde px-4 py-2 font-semibold text-white disabled:opacity-50"
       >
-        {loading ? "Running agents..." : "Submit dispute"}
+        {loading ? "Running demo..." : "Submit dispute"}
       </button>
     </form>
   );

@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-pydantic
+pydantic>=2,<3
 pydantic-settings
 langgraph
 langchain-core
@@ -10,3 +10,4 @@ asyncpg
 python-dotenv
 pytest
 pytest-asyncio
+httpx

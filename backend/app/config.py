@@ -1,5 +1,7 @@
 from functools import lru_cache
 
+from pydantic import Field
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -7,7 +9,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     app_env: str = "development"
-    judge_confidence_threshold: float = 0.75
+    judge_confidence_threshold: float = Field(default=0.75, ge=0, le=1, allow_inf_nan=False)
 
     # Tencent Cloud DB placeholders - see backend/.env.example
     tencent_db_host: str = "REPLACE_WITH_TENCENT_DB_HOST"

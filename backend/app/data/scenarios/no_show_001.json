@@ -1,0 +1,145 @@
+{
+  "scenario_id": "no_show_001",
+  "category": "no_show",
+  "title": "No-show — different mall pickup entrances",
+  "description": "A driver waited five minutes and charged SGD 5.00. The rider replied before cancellation, but location uncertainty and different entrances complicate whether the waiting clock was valid.",
+  "trip_id": "trip_ns_20260919_1202",
+  "rider_id": "rider_demo_031",
+  "driver_id": "driver_demo_042",
+  "evidence": {
+    "scenario_id": "no_show_001",
+    "trip_id": "trip_ns_20260919_1202",
+    "gps_data": {
+      "availability": "available",
+      "data": {
+        "points": [
+          {
+            "timestamp": "2026-09-19T12:02:10+08:00",
+            "latitude": 1.2956,
+            "longitude": 103.8584,
+            "accuracy_m": 65
+          },
+          {
+            "timestamp": "2026-09-19T12:03:10+08:00",
+            "latitude": 1.2957,
+            "longitude": 103.8585,
+            "accuracy_m": 52
+          },
+          {
+            "timestamp": "2026-09-19T12:05:10+08:00",
+            "latitude": 1.2956,
+            "longitude": 103.8584,
+            "accuracy_m": 70
+          },
+          {
+            "timestamp": "2026-09-19T12:07:10+08:00",
+            "latitude": 1.2956,
+            "longitude": 103.8584,
+            "accuracy_m": 61
+          }
+        ],
+        "actual_route_km": 0,
+        "estimated_route_km": 8.2,
+        "waiting_minutes": 5,
+        "pickup_distance_m": 130,
+        "events": [
+          {
+            "timestamp": "2026-09-19T12:00:00+08:00",
+            "source": "booking_service",
+            "description": "Booking selected Suntec Tower 3 pickup bay at 1.2965, 103.8591; free-text note says convention entrance."
+          },
+          {
+            "timestamp": "2026-09-19T12:02:10+08:00",
+            "source": "driver_app",
+            "description": "Driver marked arrived near the convention entrance; app enabled waiting timer."
+          },
+          {
+            "timestamp": "2026-09-19T12:04:00+08:00",
+            "source": "call_metadata",
+            "description": "One driver-to-rider call attempt lasted 18 seconds with no answer; no audio is available."
+          },
+          {
+            "timestamp": "2026-09-19T12:07:10+08:00",
+            "source": "booking_service",
+            "description": "Driver cancelled as no-show after five minutes on the app timer. Passenger trip never started."
+          }
+        ],
+        "limitations": [
+          "Driver location accuracy is 52–70 m around covered entrances; 130 m pickup offset is an estimate.",
+          "Rider location telemetry is unavailable because location permission was disabled.",
+          "The app timer measures time since the arrival button, not proof of arrival at the correct pickup bay."
+        ]
+      },
+      "reason": null
+    },
+    "chat_logs": {
+      "availability": "available",
+      "data": [
+        {
+          "timestamp": "2026-09-19T12:01:00+08:00",
+          "sender": "rider",
+          "message": "I am at Tower 3 taxi bay, near the blue sign.",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-19T12:02:20+08:00",
+          "sender": "driver",
+          "message": "At convention entrance as your note says. Cannot stop for long here.",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-19T12:05:14+08:00",
+          "sender": "rider",
+          "message": "I see Tower 3 on my booking. Walking over now, please give me two minutes.",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-19T12:06:00+08:00",
+          "sender": "driver",
+          "message": "The waiting timer is nearly finished and security is asking me to move.",
+          "delivered": true
+        },
+        {
+          "timestamp": "2026-09-19T12:07:10+08:00",
+          "sender": "system",
+          "message": "Booking cancelled. A SGD 5.00 no-show fee was charged.",
+          "delivered": true
+        }
+      ],
+      "reason": null
+    },
+    "fare_data": {
+      "availability": "available",
+      "data": {
+        "currency": "SGD",
+        "quoted_total": 16.2,
+        "charged_total": 5,
+        "distance_charge": 0,
+        "cancellation_fee": 5,
+        "tolls": 0,
+        "limitations": []
+      },
+      "reason": null
+    },
+    "user_history": {
+      "availability": "available",
+      "data": {
+        "rider": {
+          "completed_trips": 38,
+          "prior_disputes": 0,
+          "prior_cancellations": 1
+        },
+        "driver": {
+          "completed_trips": 912,
+          "prior_disputes": 2,
+          "prior_cancellations": null
+        },
+        "limitations": [
+          "Driver cancellation history is unavailable from this fixture export; null does not mean zero.",
+          "Prior dispute outcomes are unavailable; account counts do not establish fault."
+        ]
+      },
+      "reason": null
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "category": "no_show",
+  "version": "demo-2026-09-v1",
+  "is_mock": true,
+  "rules": [
+    {
+      "rule_id": "NS-01",
+      "title": "Waiting period",
+      "text": "A SGD 5.00 no-show fee may apply after at least five minutes at the designated pickup point and a reasonable contact attempt."
+    },
+    {
+      "rule_id": "NS-02",
+      "title": "Pickup ambiguity",
+      "text": "The selected pickup bay takes priority unless both parties agree to another safe location. Conflicting booking notes should be clarified; an app arrival event alone does not prove correct positioning."
+    },
+    {
+      "rule_id": "NS-03",
+      "title": "Contact and safety",
+      "text": "Consider timely rider replies and a reasonable opportunity to meet. Drivers need not remain where stopping is unsafe, but the safety claim and relocation communication should be assessed."
+    },
+    {
+      "rule_id": "NS-04",
+      "title": "Fee reversal",
+      "text": "Reverse the no-show fee when eligibility is not supported. Missing location data or a rider's reply alone does not conclusively establish either side's fault."
+    },
+    {
+      "rule_id": "COMMON-01",
+      "title": "Evidence uncertainty",
+      "text": "Account history is context only. Missing telemetry and GPS accuracy must be considered explicitly, without inferring fraud."
+    }
+  ]
+}

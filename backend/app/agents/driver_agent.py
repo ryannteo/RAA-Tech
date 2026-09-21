@@ -1,26 +1,19 @@
-# Driver Advocate Agent - mirror of RiderAdvocateAgent, argues driver-favorable outcome.
-# Reads: driver_statement (may be None), gps_data, chat_logs, fare_data, user_history, risk_signals
-# Writes: driver_case = {claim, supporting_points, requested_outcome}
-# TODO: replace placeholder with a real llm_client.complete() prompt; keep output
-# shape identical to RiderAdvocateAgent so JudgeAgent can compare fairly.
+"""Typed stub; input cannot contain the rider advocate's output."""
 from app.agents.base import BaseAgent
-from app.agents.state import DisputeState
+from app.schemas.dispute import AdvocateCase, AdvocateInput
 
 
-class DriverAdvocateAgent(BaseAgent):
+class DriverAdvocateAgent(BaseAgent[AdvocateInput, AdvocateCase]):
     name = "driver_advocate"
 
-    async def run(self, state: DisputeState) -> DisputeState:
-        self.log(state, "Reviewing evidence to build the driver's case...")
-
-        state["driver_case"] = {
-            "claim": "Placeholder: driver defends the charge/route taken.",
-            "supporting_points": ["Placeholder evidence point from GPS/chat/fare data."],
-            "requested_outcome": "no_action",
-        }
-
-        self.log(state, "Driver case ready.", data=state["driver_case"])
-        return state
+    async def run(self, context: AdvocateInput) -> AdvocateCase:
+        return AdvocateCase(
+            side="driver",
+            claim=context.dispute.driver_statement or "No driver statement supplied.",
+            supporting_points=("Stub: evidence and policy received; argument generation is pending.",),
+            requested_outcome="undetermined",
+            source="stub",
+        )
 
 
 driver_advocate_agent = DriverAdvocateAgent()

@@ -1,21 +1,15 @@
-# SLA & Routing Manager - prioritizes disputes; runs at intake AND after escalation
-# (registered as two graph nodes pointing at the same agent - see graph.py).
-# Writes: priority = "urgent" | "high" | "normal"
-# TODO: real prioritization (safety_incident, high fare amounts, repeat-flagged users).
+"""Minimal deterministic priority assignment; no queues or SLA simulation."""
+from typing import Literal
+
 from app.agents.base import BaseAgent
-from app.agents.state import DisputeState
+from app.schemas.dispute import Dispute
 
 
-class SLARoutingAgent(BaseAgent):
+class SLARoutingAgent(BaseAgent[Dispute, Literal["normal"]]):
     name = "sla_routing"
 
-    async def run(self, state: DisputeState) -> DisputeState:
-        self.log(state, "Assigning priority / routing queue...")
-
-        state["priority"] = "urgent" if state.get("category") == "safety_incident" else "normal"
-
-        self.log(state, f"Priority set to '{state['priority']}'.")
-        return state
+    async def run(self, context: Dispute) -> Literal["normal"]:
+        return "normal"
 
 
 sla_routing_agent = SLARoutingAgent()

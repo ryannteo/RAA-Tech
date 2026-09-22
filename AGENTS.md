@@ -11,7 +11,7 @@
 
 ## Current MVP
 Dispute -> deterministic evidence + policy -> Rider Advocate -> Driver Advocate -> Judge -> validate ruling -> resolved / needs_review.
-The two scenarios are `route_deviation_001` and `no_show_001`. Advocates and Judge are explicit typed stubs. SLA priority is normal; fraud is bypassed. Review is terminal, with no fabricated human decision or feedback.
+The two scenarios are `route_deviation_001` and `no_show_001`. Rider Advocate uses Tencent TokenHub / Hy3 through the shared OpenAI-compatible adapter in real mode, with an explicit offline mock stub. Driver Advocate and Judge remain typed stubs. Rider output is validated as the existing AdvocateCase, including inline citations; provider or output failures stop before Driver/Judge through the controlled advocate-error path. SLA priority is normal; fraud is bypassed. Review is terminal, with no fabricated human decision or feedback.
 
 ## Development
 - Keep agent implementation changes local to their modules. Coordinate shared contract/graph changes across consumers in the same change; update frontend types and contract tests together.

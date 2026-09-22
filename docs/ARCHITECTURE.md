@@ -84,16 +84,29 @@ Policy fixtures are fictional and explicitly labelled as mock.
 
 ## Extension points and current limits
 
-- Implement each advocate's `run(AdvocateInput) -> AdvocateCase` independently.
+- Rider Advocate implements `run(AdvocateInput) -> AdvocateCase` using Tencent
+  TokenHub / Hy3. Driver Advocate remains an independent typed stub.
 - Implement `JudgeAgent.run(JudgeInput) -> Ruling` independently.
 - Keep data retrieval in services and orchestration/validation in graph adapters.
 - Coordinate schema changes across API, graph, frontend types, and contract tests.
-- Current advocates report the supplied statement or its absence and identify
+- Rider real mode sends only `AdvocateInput` and the separate Rider prompt to
+  TokenHub's OpenAI-compatible Chat Completions endpoint. The shared adapter
+  requests JSON Schema generated from `AdvocateCase`, explicitly decodes the
+  raw response, and checks its envelope. The Rider validates the existing
+  contract and inline evidence/policy citations. It never receives other cases
+  or expected outcomes and never exposes provider reasoning content.
+- `LLM_PROVIDER=mock` keeps the Rider offline and labelled as a stub. Real mode
+  (`tokenhub`, model `hy3`) requires credentials and a matching regional endpoint.
+  The adapter is active; SDK parsing helpers are not used. Malformed envelopes,
+  decoding errors, provider failures, and invalid Rider output take the existing
+  structured HTTP 502 advocate-error path; Driver/Judge do not run and no result
+  or fallback case is stored. Tests use fake responses and HTTP transport.
+- Driver and mock Rider report the supplied statement or its absence and identify
   themselves as stubs. Judge outputs are fixed presets: route deviation 0.85,
   no-show 0.60. These are routing demonstrations, not evidence-based decisions.
 - SLA assigns normal priority. Fraud is bypassed as `not_implemented`, with
   no fabricated risk scores.
 - The in-memory store holds validated results for this process only.
-  `db/models.py` and `agents/llm.py` remain dormant scaffolding.
+  `db/models.py` remains dormant scaffolding.
 - RAG, embeddings, database infrastructure, multimodal analysis, human-review
   implementation, learning, queues, streaming, and real fraud detection are deferred.

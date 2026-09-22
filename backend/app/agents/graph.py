@@ -6,6 +6,7 @@ from app.agents.driver_agent import driver_advocate_agent
 from app.agents.escalation_agent import route_ruling
 from app.agents.evidence_agent import evidence_agent
 from app.agents.judge_agent import judge_agent
+from app.agents.llm import LLMError
 from app.agents.policy_agent import policy_precedent_agent
 from app.agents.rider_agent import rider_advocate_agent
 from app.agents.sla_agent import sla_routing_agent
@@ -65,7 +66,7 @@ async def _rider(state: DisputeState):
         case = AdvocateCase.model_validate(await rider_advocate_agent.run(_advocate_input(state)))
         if case.side != "rider":
             raise AdvocateContractError("rider_advocate")
-    except ValidationError as exc:
+    except (ValidationError, LLMError) as exc:
         raise AdvocateContractError("rider_advocate") from exc
     return {
         "rider_case": case,

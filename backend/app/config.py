@@ -1,6 +1,7 @@
 from functools import lru_cache
+from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import Field, StringConstraints
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -19,10 +20,10 @@ class Settings(BaseSettings):
     tencent_db_name: str = "ryde_disputes"
     tencent_db_ssl: str = "require"
 
-    llm_provider: str = "mock"
+    llm_provider: Literal["mock", "tokenhub"] = "mock"
     llm_api_key: str = ""
-    llm_base_url: str = ""
-    llm_model: str = "gpt-4o-mini"
+    llm_base_url: str = "https://tokenhub-intl.tencentcloudmaas.com/v1"
+    llm_model: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)] = "hy3"
 
     @property
     def database_url(self) -> str:

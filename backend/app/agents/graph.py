@@ -79,7 +79,7 @@ async def _driver(state: DisputeState):
         case = AdvocateCase.model_validate(await driver_advocate_agent.run(_advocate_input(state)))
         if case.side != "driver":
             raise AdvocateContractError("driver_advocate")
-    except ValidationError as exc:
+    except (ValidationError, LLMError) as exc:
         raise AdvocateContractError("driver_advocate") from exc
     return {
         "driver_case": case,
